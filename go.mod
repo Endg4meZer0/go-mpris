@@ -1,4 +1,4 @@
-module github.com/Pauloo27/go-mpris
+module github.com/Endg4meZer0/go-mpris
 
 go 1.14
 

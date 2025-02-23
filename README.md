@@ -3,11 +3,10 @@
 A Go library for MPRIS.
 
 ## Install
-
-> $ go get github.com/Pauloo27/go-mpris
-
-_the dependency github.com/godbus/dbus/v5 is going to be installed as well._
-
+```
+$ go get github.com/Endg4meZer0/go-mpris
+```
+The dependency `github.com/godbus/dbus/v5` will be installed as well.
 
 ## Example
 Printing the current playback status and then changing it:
@@ -15,7 +14,7 @@ Printing the current playback status and then changing it:
 import (
 	"log"
 
-	"github.com/Pauloo27/go-mpris"
+	"github.com/Endg4meZer0/go-mpris"
 	"github.com/godbus/dbus/v5"
 )
 
@@ -51,8 +50,11 @@ func main() {
 **For more examples, see the [examples folder](./examples).**
 
 ## Go Docs
-Read the docs at https://pkg.go.dev/github.com/Pauloo27/go-mpris.
+Read the docs at https://pkg.go.dev/github.com/Endg4meZer0/go-mpris.
 
 ## Credits
-[emersion](https://github.com/emersion/go-mpris) for the original code.
+[Pauloo27](https://github.com/pauloo27/go-mpris) for the original code.
 
+[emersion](https://github.com/emersion/go-mpris) for the original-original code.
+
+[leberKleber](https://github.com/leberKleber/go-mpris) for several additional ideas regarding metadata.

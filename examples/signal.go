@@ -1,9 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
-	"github.com/Pauloo27/go-mpris"
+	"github.com/Endg4meZer0/go-mpris"
 	"github.com/godbus/dbus/v5"
 )
 
@@ -27,11 +28,11 @@ func main() {
 	player := mpris.New(conn, name)
 
 	ch := make(chan *dbus.Signal)
-	err := player.OnSignal(ch)
+	err = player.OnPropertiesChanged(ch)
 	if err != nil {
 		panic(err)
 	}
 
 	sig := <-ch
-	fmt.Println(sig.Body)
+	fmt.Println(mpris.GetPropertiesChangedFromSignal(sig))
 }
