@@ -212,8 +212,9 @@ func TestGetMetadata(t *testing.T) {
 		return
 	}
 
-	_, err = md.TrackID()
+	trackID, err := md.TrackID()
 	if err != nil {
+		t.Log(trackID)
 		t.Error(err)
 		return
 	}
@@ -256,8 +257,13 @@ func TestSetPosition(t *testing.T) {
 		t.Error("variant value is nil")
 		return
 	}
-	trackId := metadata["mpris:trackid"].Value().(dbus.ObjectPath)
-	if err := player.SetTrackPosition(&trackId, 11*1000*1000); err != nil {
+
+	trackId, err := metadata.TrackID()
+	if err != nil {
+		t.Error(err)
+	}
+
+	if err := player.SetTrackPosition(trackId, 11*1000*1000); err != nil {
 		t.Error(err)
 	}
 }

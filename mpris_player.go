@@ -59,7 +59,7 @@ func (i *Player) SeekBy(offset int64) error {
 // Sets the specified track's position in microseconds (if it's playing).
 // Perhaps you would like to use SetPosition instead.
 // See also: https://specifications.freedesktop.org/mpris-spec/latest/Player_Interface.html#Method:SetPosition
-func (i *Player) SetTrackPosition(trackId *dbus.ObjectPath, position int64) error {
+func (i *Player) SetTrackPosition(trackId dbus.ObjectPath, position int64) error {
 	return i.obj.Call(PlayerInterface+".SetPosition", 0, trackId, position).Err
 }
 
@@ -268,7 +268,7 @@ func (i *Player) SetPosition(position int64) error {
 		return errors.New("variant value is nil")
 	}
 	trackId := metadata["mpris:trackid"].Value().(dbus.ObjectPath)
-	i.SetTrackPosition(&trackId, position)
+	i.SetTrackPosition(trackId, position)
 	return nil
 }
 

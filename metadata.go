@@ -12,16 +12,21 @@ const timeFormat = "2006-01-02T15:04-07:00"
 // Returns a unique identity for the track within the context of an MPRIS object (e.g. tracklist).
 func (md Metadata) TrackID() (dbus.ObjectPath, error) {
 	variant := md["mpris:trackid"].Value()
-	if variant == nil {
+	if variant == "" {
 		return "", nil
 	}
 
-	v, ok := variant.(dbus.ObjectPath)
-	if !ok {
+	// We'll try parsing TrackID in several ways, because of inconsistency between players
+	switch v := variant.(type) {
+	case dbus.ObjectPath:
+		return v, nil
+	case *dbus.ObjectPath:
+		return *v, nil
+	case string:
+		return dbus.ObjectPath(v), nil
+	default:
 		return "", errors.New("could not parse mpris:trackid")
 	}
-
-	return v, nil
 }
 
 // Returns the duration of the track in microseconds.
