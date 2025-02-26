@@ -26,12 +26,17 @@ func (i *Player) GetTracksMetadata(tracks []string) ([]Metadata, error) {
 	if variant.Value() == nil {
 		return nil, errors.New("variant value is nil")
 	}
-	value, ok := variant.Value().([]Metadata)
+	value, ok := variant.Value().([]map[string]dbus.Variant)
 	if !ok {
-		return nil, errors.New("variant type is not []Metadata")
+		return nil, errors.New("variant type is not []map[string]dbus.Variant")
 	}
 
-	return value, nil
+	rvalue := make([]Metadata, len(value))
+	for i, v := range value {
+		rvalue[i] = Metadata(v)
+	}
+
+	return rvalue, nil
 }
 
 // Adds the specified Uri after a specified track and if it should become current track.
