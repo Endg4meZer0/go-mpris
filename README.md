@@ -57,4 +57,4 @@ Read the docs at https://pkg.go.dev/github.com/Endg4meZer0/go-mpris.
 
 [emersion](https://github.com/emersion/go-mpris) for the original-original code.
 
-[leberKleber](https://github.com/leberKleber/go-mpris) for several additional ideas regarding metadata.
+[leberKleber](https://github.com/leberKleber/go-mpris) and their code for several additional ideas regarding metadata.
