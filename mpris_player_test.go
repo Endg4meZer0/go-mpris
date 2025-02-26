@@ -253,8 +253,8 @@ func TestSetPosition(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	if metadata == nil || metadata["mpris:trackid"].Value() == nil {
-		t.Error("variant value is nil")
+	if metadata == nil {
+		t.Error("metadata is nil")
 		return
 	}
 

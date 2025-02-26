@@ -264,10 +264,13 @@ func (i *Player) SetPosition(position int64) error {
 	if err != nil {
 		return err
 	}
-	if metadata == nil || metadata["mpris:trackid"].Value() == nil {
-		return errors.New("variant value is nil")
+	if metadata == nil {
+		return errors.New("metadata is nil")
 	}
-	trackId := metadata["mpris:trackid"].Value().(dbus.ObjectPath)
+	trackId, err := metadata.TrackID()
+	if err != nil {
+		return err
+	}
 	i.SetTrackPosition(trackId, position)
 	return nil
 }
