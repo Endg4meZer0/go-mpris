@@ -102,7 +102,7 @@ func TestOnSeeked(t *testing.T) {
 	for {
 		select {
 		case v := <-ch:
-			pos, err := GetPositionFromSignal(v)
+			pos, err := SignalToPosition(v)
 			if err != nil {
 				t.Error(err)
 				return
@@ -131,7 +131,7 @@ func TestOnPropertiesChanged(t *testing.T) {
 	for {
 		select {
 		case v := <-ch:
-			maps, err := GetPropertiesChangedFromSignal(v)
+			maps, err := SignalToPropertiesChanged(v)
 			if err != nil {
 				t.Error(err)
 				return
@@ -257,7 +257,7 @@ func TestSetPosition(t *testing.T) {
 		return
 	}
 	trackId := metadata["mpris:trackid"].Value().(dbus.ObjectPath)
-	if err := player.SetTrackPosition(&trackId, 5*1000*1000); err != nil {
+	if err := player.SetTrackPosition(&trackId, 11*1000*1000); err != nil {
 		t.Error(err)
 	}
 }

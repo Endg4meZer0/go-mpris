@@ -19,7 +19,7 @@ func main() {
 	}
 
 	if len(names) == 0 {
-		log.Fatal("No player found")
+		log.Fatal("No players found")
 	}
 
 	name := names[0]
@@ -28,13 +28,13 @@ func main() {
 
 	status, err := player.GetPlaybackStatus()
 	if err != nil {
-		log.Fatal("Could not get current playback status")
+		log.Fatalf("Could not get current playback status: %s", err)
 	}
 
 	log.Printf("The player was %s...", status)
 
 	err = player.PlayPause()
 	if err != nil {
-		log.Fatal("Could not play/pause player")
+		log.Fatalf("Could not play/pause player: %s", err)
 	}
 }

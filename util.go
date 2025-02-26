@@ -6,7 +6,7 @@ import (
 	"github.com/godbus/dbus/v5"
 )
 
-func GetPositionFromSignal(signal *dbus.Signal) (int64, error) {
+func SignalToPosition(signal *dbus.Signal) (int64, error) {
 	if len(signal.Body) == 0 {
 		return 0, errors.New("signal's body is empty")
 	}
@@ -19,7 +19,7 @@ func GetPositionFromSignal(signal *dbus.Signal) (int64, error) {
 	return v, nil
 }
 
-func GetPropertiesChangedFromSignal(signal *dbus.Signal) (map[string]dbus.Variant, error) {
+func SignalToPropertiesChanged(signal *dbus.Signal) (map[string]dbus.Variant, error) {
 	if len(signal.Body) == 0 {
 		return nil, errors.New("signal's body is empty")
 	}

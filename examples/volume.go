@@ -17,7 +17,7 @@ func main() {
 		panic(err)
 	}
 	if len(names) == 0 {
-		log.Fatal("No player found")
+		log.Fatal("No players found")
 	}
 
 	name := names[0]
@@ -28,6 +28,9 @@ func main() {
 		log.Fatal("Could not get current volume")
 	}
 
-	log.Printf("The player volume is %f...", volume)
-	player.SetVolume(volume - 0.1)
+	log.Printf("The player's volume is %f...", volume)
+	err = player.SetVolume(volume - 0.1)
+	if err != nil {
+		panic(err)
+	}
 }

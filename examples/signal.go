@@ -20,7 +20,7 @@ func main() {
 	}
 
 	if len(names) == 0 {
-		log.Fatal("No player found")
+		log.Fatal("No players found")
 	}
 
 	name := names[0]
@@ -34,5 +34,5 @@ func main() {
 	}
 
 	sig := <-ch
-	fmt.Println(mpris.GetPropertiesChangedFromSignal(sig))
+	fmt.Println(mpris.SignalToPropertiesChanged(sig))
 }
