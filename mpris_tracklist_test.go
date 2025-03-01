@@ -100,7 +100,8 @@ func TestGoTo(t *testing.T) {
 // This test runs for 10s to collect TrackListReplaced signals.
 func TestTrackListReplaced(t *testing.T) {
 	player := getCurrentPlayer(t)
-	ch, err := player.RegisterSignalReceiver()
+	ch := make(chan *dbus.Signal)
+	err := player.RegisterSignalReceiver(ch)
 	if err != nil {
 		t.Error(err)
 		return
@@ -127,7 +128,8 @@ func TestTrackListReplaced(t *testing.T) {
 // This test runs for 10s to collect TrackAdded signals.
 func TestTrackAdded(t *testing.T) {
 	player := getCurrentPlayer(t)
-	ch, err := player.RegisterSignalReceiver()
+	ch := make(chan *dbus.Signal)
+	err := player.RegisterSignalReceiver(ch)
 	if err != nil {
 		t.Error(err)
 		return
@@ -154,7 +156,8 @@ func TestTrackAdded(t *testing.T) {
 // This test runs for 10s to collect TrackRemoved signals.
 func TestTrackRemoved(t *testing.T) {
 	player := getCurrentPlayer(t)
-	ch, err := player.RegisterSignalReceiver()
+	ch := make(chan *dbus.Signal)
+	err := player.RegisterSignalReceiver(ch)
 	if err != nil {
 		t.Error(err)
 		return
@@ -181,7 +184,8 @@ func TestTrackRemoved(t *testing.T) {
 // This test runs for 10s to collect TrackMetadataChanged signals.
 func TestTrackMetadataChanged(t *testing.T) {
 	player := getCurrentPlayer(t)
-	ch, err := player.RegisterSignalReceiver()
+	ch := make(chan *dbus.Signal)
+	err := player.RegisterSignalReceiver(ch)
 	if err != nil {
 		t.Error(err)
 		return

@@ -89,7 +89,8 @@ func TestOpenUri(t *testing.T) {
 // This test runs for 10s to collect Seeked signals.
 func TestOnSeeked(t *testing.T) {
 	player := getCurrentPlayer(t)
-	ch, err := player.RegisterSignalReceiver()
+	ch := make(chan *dbus.Signal)
+	err := player.RegisterSignalReceiver(ch)
 	if err != nil {
 		t.Error(err)
 		return
@@ -126,7 +127,8 @@ func TestOnSeeked(t *testing.T) {
 // This test runs for 10s to collect PropertiesChanged signals.
 func TestOnPropertiesChanged(t *testing.T) {
 	player := getCurrentPlayer(t)
-	ch, err := player.RegisterSignalReceiver()
+	ch := make(chan *dbus.Signal)
+	err := player.RegisterSignalReceiver(ch)
 	if err != nil {
 		t.Error(err)
 		return
@@ -145,7 +147,7 @@ func TestOnPropertiesChanged(t *testing.T) {
 			if len(v.Body) != 3 {
 				t.Error("not a PropertiesChanged signal")
 			}
-			
+
 			val, ok := v.Body[1].(map[string]dbus.Variant)
 			if !ok {
 				t.Error("signal's changed properties is not a dict")
