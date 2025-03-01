@@ -44,6 +44,87 @@ func List(conn *dbus.Conn) ([]string, error) {
 	return mprisNames, nil
 }
 
+// Registers a new signal receiver channel that will be able to get signals as specified in SignalType definition.
+func (i *Player) RegisterSignalReceiver() (ch chan *dbus.Signal, err error) {
+	// Add PropertiesChanged handler
+	err = i.conn.AddMatchSignal(
+		dbus.WithMatchSender(i.name),
+		dbus.WithMatchInterface("org.freedesktop.DBus.Properties"),
+		dbus.WithMatchMember("PropertiesChanged"),
+	)
+	if err != nil {
+		return
+	}
+
+	// Add NameOwnerChanged handler
+	err = i.conn.AddMatchSignal(
+		dbus.WithMatchInterface("org.freedesktop.DBus"),
+		dbus.WithMatchMember("NameOwnerChanged"),
+	)
+	if err != nil {
+		return
+	}
+
+	// Add Seeked handler
+	// See also: https://specifications.freedesktop.org/mpris-spec/latest/Player_Interface.html#Signal:Seeked
+	err = i.conn.AddMatchSignal(
+		dbus.WithMatchSender(i.name),
+		dbus.WithMatchInterface(PlayerInterface),
+		dbus.WithMatchMember("Seeked"),
+	)
+	if err != nil {
+		return
+	}
+
+	// Add TrackListReplaced handler
+	// See also: https://specifications.freedesktop.org/mpris-spec/latest/Track_List_Interface.html#Signal:TrackListReplaced
+	err = i.conn.AddMatchSignal(
+		dbus.WithMatchInterface(TrackListInterface),
+		dbus.WithMatchMember("TrackListReplaced"),
+		dbus.WithMatchSender(i.name),
+	)
+	if err != nil {
+		return
+	}
+
+	// Add TrackAdded handler
+	// See also: https://specifications.freedesktop.org/mpris-spec/latest/Track_List_Interface.html#Signal:TrackAdded
+	err = i.conn.AddMatchSignal(
+		dbus.WithMatchInterface(TrackListInterface),
+		dbus.WithMatchMember("TrackAdded"),
+		dbus.WithMatchSender(i.name),
+	)
+	if err != nil {
+		return
+	}
+
+	// Adds TrackRemoved handler.
+	// See also: https://specifications.freedesktop.org/mpris-spec/latest/Track_List_Interface.html#Signal:TrackRemoved
+	err = i.conn.AddMatchSignal(
+		dbus.WithMatchInterface(TrackListInterface),
+		dbus.WithMatchMember("TrackRemoved"),
+		dbus.WithMatchSender(i.name),
+	)
+	if err != nil {
+		return
+	}
+
+	// Adds TrackMetadataChanged handler.
+	// See also: https://specifications.freedesktop.org/mpris-spec/latest/Track_List_Interface.html#Signal:TrackMetadataChanged
+	err = i.conn.AddMatchSignal(
+		dbus.WithMatchInterface(TrackListInterface),
+		dbus.WithMatchMember("TrackMetadataChanged"),
+		dbus.WithMatchSender(i.name),
+	)
+	if err != nil {
+		return
+	}
+
+	ch = make(chan *dbus.Signal)
+	i.conn.Signal(ch)
+	return
+}
+
 // Gets the player full name (including base interface name).
 func (i *Player) GetName() string {
 	return i.name
@@ -52,4 +133,26 @@ func (i *Player) GetName() string {
 // Gets the player short name (without the base interface name).
 func (i *Player) GetShortName() string {
 	return strings.ReplaceAll(i.name, BaseInterface+".", "")
+}
+
+// Gets the supported signal type from *dbus.Signal
+func GetSignalType(signal *dbus.Signal) SignalType {
+	switch signal.Name {
+	case propertiesChangedSignal:
+		return SignalPropertiesChanged
+	case nameOwnerChangedSignal:
+		return SignalNameOwnerChanged
+	case seekedSignal:
+		return SignalSeeked
+	case trackListReplacedSignal:
+		return SignalTrackListReplaced
+	case trackAddedSignal:
+		return SignalTrackAdded
+	case trackRemovedSignal:
+		return SignalTrackRemoved
+	case trackMetadataChangedSignal:
+		return SignalTrackMetadataChanged
+	default:
+		return SignalNotSupported
+	}
 }

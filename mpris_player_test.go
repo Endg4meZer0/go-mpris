@@ -89,8 +89,7 @@ func TestOpenUri(t *testing.T) {
 // This test runs for 10s to collect Seeked signals.
 func TestOnSeeked(t *testing.T) {
 	player := getCurrentPlayer(t)
-	ch := make(chan *dbus.Signal)
-	err := player.OnSeeked(ch)
+	ch, err := player.RegisterSignalReceiver()
 	if err != nil {
 		t.Error(err)
 		return
@@ -102,12 +101,21 @@ func TestOnSeeked(t *testing.T) {
 	for {
 		select {
 		case v := <-ch:
-			pos, err := SignalToPosition(v)
-			if err != nil {
-				t.Error(err)
+			if GetSignalType(v) != SignalSeeked {
+				continue
+			}
+
+			if len(v.Body) == 0 {
+				t.Error("signal's body is empty")
+			}
+
+			val, ok := v.Body[0].(int64)
+			if !ok {
+				t.Error("signal's body is not int64")
 				return
 			}
-			sigCol = append(sigCol, pos)
+
+			sigCol = append(sigCol, val)
 		case <-timer.C:
 			t.Log(sigCol)
 			return
@@ -118,8 +126,7 @@ func TestOnSeeked(t *testing.T) {
 // This test runs for 10s to collect PropertiesChanged signals.
 func TestOnPropertiesChanged(t *testing.T) {
 	player := getCurrentPlayer(t)
-	ch := make(chan *dbus.Signal)
-	err := player.OnPropertiesChanged(ch)
+	ch, err := player.RegisterSignalReceiver()
 	if err != nil {
 		t.Error(err)
 		return
@@ -131,12 +138,20 @@ func TestOnPropertiesChanged(t *testing.T) {
 	for {
 		select {
 		case v := <-ch:
-			maps, err := SignalToPropertiesChanged(v)
-			if err != nil {
-				t.Error(err)
-				return
+			if GetSignalType(v) != SignalPropertiesChanged {
+				continue
 			}
-			sigCol = append(sigCol, maps)
+
+			if len(v.Body) != 3 {
+				t.Error("not a PropertiesChanged signal")
+			}
+			
+			val, ok := v.Body[1].(map[string]dbus.Variant)
+			if !ok {
+				t.Error("signal's changed properties is not a dict")
+			}
+
+			sigCol = append(sigCol, val)
 		case <-timer.C:
 			t.Log(sigCol)
 			return

@@ -20,6 +20,9 @@ type PlaybackStatus string
 // The status of the player loop. May be "None", "Track" or "Playlist".
 type LoopStatus string
 
+// The type of signal received by channel. May be "PropertiesChanged", "NameOwnerChanged" and "Seeked"
+type SignalType string
+
 // A representation of MPRIS metadata.
 // See also: https://www.freedesktop.org/wiki/Specifications/mpris-spec/metadata
 type Metadata map[string]dbus.Variant

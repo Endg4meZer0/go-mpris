@@ -100,8 +100,7 @@ func TestGoTo(t *testing.T) {
 // This test runs for 10s to collect TrackListReplaced signals.
 func TestTrackListReplaced(t *testing.T) {
 	player := getCurrentPlayer(t)
-	ch := make(chan *dbus.Signal)
-	err := player.OnTrackListReplaced(ch)
+	ch, err := player.RegisterSignalReceiver()
 	if err != nil {
 		t.Error(err)
 		return
@@ -113,6 +112,10 @@ func TestTrackListReplaced(t *testing.T) {
 	for {
 		select {
 		case v := <-ch:
+			if GetSignalType(v) != SignalTrackListReplaced {
+				continue
+			}
+
 			sigCol = append(sigCol, v)
 		case <-timer.C:
 			t.Log(sigCol)
@@ -124,8 +127,7 @@ func TestTrackListReplaced(t *testing.T) {
 // This test runs for 10s to collect TrackAdded signals.
 func TestTrackAdded(t *testing.T) {
 	player := getCurrentPlayer(t)
-	ch := make(chan *dbus.Signal)
-	err := player.OnTrackAdded(ch)
+	ch, err := player.RegisterSignalReceiver()
 	if err != nil {
 		t.Error(err)
 		return
@@ -137,6 +139,10 @@ func TestTrackAdded(t *testing.T) {
 	for {
 		select {
 		case v := <-ch:
+			if GetSignalType(v) != SignalTrackAdded {
+				continue
+			}
+
 			sigCol = append(sigCol, v)
 		case <-timer.C:
 			t.Log(sigCol)
@@ -148,8 +154,7 @@ func TestTrackAdded(t *testing.T) {
 // This test runs for 10s to collect TrackRemoved signals.
 func TestTrackRemoved(t *testing.T) {
 	player := getCurrentPlayer(t)
-	ch := make(chan *dbus.Signal)
-	err := player.OnTrackRemoved(ch)
+	ch, err := player.RegisterSignalReceiver()
 	if err != nil {
 		t.Error(err)
 		return
@@ -161,6 +166,10 @@ func TestTrackRemoved(t *testing.T) {
 	for {
 		select {
 		case v := <-ch:
+			if GetSignalType(v) != SignalTrackRemoved {
+				continue
+			}
+
 			sigCol = append(sigCol, v)
 		case <-timer.C:
 			t.Log(sigCol)
@@ -172,8 +181,7 @@ func TestTrackRemoved(t *testing.T) {
 // This test runs for 10s to collect TrackMetadataChanged signals.
 func TestTrackMetadataChanged(t *testing.T) {
 	player := getCurrentPlayer(t)
-	ch := make(chan *dbus.Signal)
-	err := player.OnTrackMetadataChanged(ch)
+	ch, err := player.RegisterSignalReceiver()
 	if err != nil {
 		t.Error(err)
 		return
@@ -185,6 +193,10 @@ func TestTrackMetadataChanged(t *testing.T) {
 	for {
 		select {
 		case v := <-ch:
+			if GetSignalType(v) != SignalTrackMetadataChanged {
+				continue
+			}
+
 			sigCol = append(sigCol, v)
 		case <-timer.C:
 			t.Log(sigCol)

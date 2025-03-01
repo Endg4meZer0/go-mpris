@@ -70,47 +70,6 @@ func (i *Player) OpenUri(uri string) error {
 }
 
 /*
-   _____ ___________   _____    __   _____
-  / ___//  _/ ____/ | / /   |  / /  / ___/
-  \__ \ / // / __/  |/ / /| | / /   \__ \
- ___/ // // /_/ / /|  / ___ |/ /______/ /
-/____/___/\____/_/ |_/_/  |_/_____/____/
-*/
-
-// Adds a handler to the player's seeked signal.
-// For an ease of conversion from `*dbus.Signal` to `int64` (microseconds) of the position, use GetPositionFromSignal.
-// See also: https://specifications.freedesktop.org/mpris-spec/latest/Player_Interface.html#Signal:Seeked
-func (i *Player) OnSeeked(ch chan<- *dbus.Signal) (err error) {
-	err = i.conn.AddMatchSignal(
-		dbus.WithMatchInterface(PlayerInterface),
-		dbus.WithMatchMember("Seeked"),
-		dbus.WithMatchSender(i.name),
-	)
-	if err != nil {
-		return err
-	}
-
-	i.conn.Signal(ch)
-	return
-}
-
-// Adds a handler to the player's properties change signal.
-// For an ease of conversion from `*dbus.Signal` to `map[string]dbus.Variant` (properies that were changed), use GetPropertiesChangedFromSignal.
-func (i *Player) OnPropertiesChanged(ch chan<- *dbus.Signal) (err error) {
-	err = i.conn.AddMatchSignal(
-		dbus.WithMatchInterface("org.freedesktop.DBus.Properties"),
-		dbus.WithMatchMember("PropertiesChanged"),
-		dbus.WithMatchSender(i.name),
-	)
-	if err != nil {
-		return err
-	}
-
-	i.conn.Signal(ch)
-	return
-}
-
-/*
     ____  ____  ____  ____  __________  _____________________
    / __ \/ __ \/ __ \/ __ \/ ____/ __ \/_  __/  _/ ____/ ___/
   / /_/ / /_/ / / / / /_/ / __/ / /_/ / / /  / // __/  \__ \
