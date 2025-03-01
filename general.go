@@ -44,6 +44,34 @@ func List(conn *dbus.Conn) ([]string, error) {
 	return mprisNames, nil
 }
 
+func RegisterNameOwnerChanged(conn *dbus.Conn, ch chan<- *dbus.Signal) (err error) {
+	// Add NameOwnerChanged handler
+	err = conn.AddMatchSignal(
+		dbus.WithMatchInterface("org.freedesktop.DBus"),
+		dbus.WithMatchMember("NameOwnerChanged"),
+	)
+	if err != nil {
+		return
+	}
+
+	conn.Signal(ch)
+	return nil
+}
+
+func UnregisterNameOwnerChanged(conn *dbus.Conn, ch chan<- *dbus.Signal) (err error) {
+	// Add NameOwnerChanged handler
+	err = conn.RemoveMatchSignal(
+		dbus.WithMatchInterface("org.freedesktop.DBus"),
+		dbus.WithMatchMember("NameOwnerChanged"),
+	)
+	if err != nil {
+		return
+	}
+
+	conn.RemoveSignal(ch)
+	return nil
+}
+
 // Registers a new signal receiver channel that will be able to get signals as specified in SignalType definition.
 func (i *Player) RegisterSignalReceiver(ch chan<- *dbus.Signal) (err error) {
 	// Add PropertiesChanged handler
@@ -51,15 +79,6 @@ func (i *Player) RegisterSignalReceiver(ch chan<- *dbus.Signal) (err error) {
 		dbus.WithMatchSender(i.name),
 		dbus.WithMatchInterface("org.freedesktop.DBus.Properties"),
 		dbus.WithMatchMember("PropertiesChanged"),
-	)
-	if err != nil {
-		return
-	}
-
-	// Add NameOwnerChanged handler
-	err = i.conn.AddMatchSignal(
-		dbus.WithMatchInterface("org.freedesktop.DBus"),
-		dbus.WithMatchMember("NameOwnerChanged"),
 	)
 	if err != nil {
 		return
