@@ -7,6 +7,9 @@ import (
 	"github.com/godbus/dbus/v5"
 )
 
+// Some metadata fields are parsed using different types
+// because of general inconsistency between different players.
+
 const timeFormat = "2006-01-02T15:04-07:00"
 
 // Returns a unique identity for the track within the context of an MPRIS object (e.g. tracklist).
@@ -16,7 +19,6 @@ func (md Metadata) TrackID() (dbus.ObjectPath, error) {
 		return "", nil
 	}
 
-	// We'll try parsing TrackID in several ways, because of inconsistency between players
 	switch v := variant.(type) {
 	case dbus.ObjectPath:
 		return v, nil
@@ -30,18 +32,29 @@ func (md Metadata) TrackID() (dbus.ObjectPath, error) {
 }
 
 // Returns the duration of the track in microseconds.
+// Why int64 and not uint64: https://www.freedesktop.org/wiki/Specifications/mpris-spec/metadata/#mpris:length
 func (md Metadata) Length() (int64, error) {
 	variant := md["mpris:length"].Value()
 	if variant == nil {
 		return 0, nil
 	}
 
-	v, ok := variant.(int64)
-	if !ok {
+	switch v := variant.(type) {
+	case uint64:
+		return int64(v), nil
+	case int:
+		return int64(v), nil
+	case uint:
+		return int64(v), nil
+	case int32:
+		return int64(v), nil
+	case uint32:
+		return int64(v), nil
+	case int64:
+		return v, nil
+	default:
 		return 0, errors.New("could not parse mpris:length")
 	}
-
-	return v, nil
 }
 
 // Returns the location of an image representing the track or album.
