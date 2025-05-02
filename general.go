@@ -154,15 +154,6 @@ func (i *Player) UnregisterSignalReceiver(ch chan *dbus.Signal) (err error) {
 		return
 	}
 
-	// Remove NameOwnerChanged handler
-	err = i.conn.RemoveMatchSignal(
-		dbus.WithMatchInterface("org.freedesktop.DBus"),
-		dbus.WithMatchMember("NameOwnerChanged"),
-	)
-	if err != nil {
-		return
-	}
-
 	// Remove Seeked handler
 	// See also: https://specifications.freedesktop.org/mpris-spec/latest/Player_Interface.html#Signal:Seeked
 	err = i.conn.RemoveMatchSignal(
